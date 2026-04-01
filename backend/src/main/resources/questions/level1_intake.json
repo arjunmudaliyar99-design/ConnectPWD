@@ -1,0 +1,107 @@
+[
+  {
+    "index": 1, "code": "L1_1",
+    "text_en": "What is the child's full name?",
+    "text_hi": "बच्चे का पूरा नाम क्या है?",
+    "description_en": "Full legal name of the child being assessed",
+    "description_hi": "मूल्यांकन किए जा रहे बच्चे का पूरा कानूनी नाम",
+    "type": "TEXT", "domainIndex": 1,
+    "domainName_en": "Basic Information", "domainName_hi": "बुनियादी जानकारी",
+    "options_en": null, "options_hi": null
+  },
+  {
+    "index": 2, "code": "L1_2",
+    "text_en": "What is the child's age (in years)?",
+    "text_hi": "बच्चे की उम्र (वर्षों में) क्या है?",
+    "description_en": "Current age of the child in years",
+    "description_hi": "बच्चे की वर्तमान आयु वर्षों में",
+    "type": "TEXT", "domainIndex": 1,
+    "domainName_en": "Basic Information", "domainName_hi": "बुनियादी जानकारी",
+    "options_en": null, "options_hi": null
+  },
+  {
+    "index": 3, "code": "L1_3",
+    "text_en": "What is the child's gender?",
+    "text_hi": "बच्चे का लिंग क्या है?",
+    "description_en": "Gender of the child",
+    "description_hi": "बच्चे का लिंग",
+    "type": "CHOICE", "domainIndex": 1,
+    "domainName_en": "Basic Information", "domainName_hi": "बुनियादी जानकारी",
+    "options_en": ["Male", "Female", "Other"],
+    "options_hi": ["पुरुष", "महिला", "अन्य"]
+  },
+  {
+    "index": 4, "code": "L1_4",
+    "text_en": "What is the primary language spoken at home?",
+    "text_hi": "घर पर बोली जाने वाली प्राथमिक भाषा क्या है?",
+    "description_en": "Primary language spoken in the child's home environment",
+    "description_hi": "बच्चे के घरेलू वातावरण में बोली जाने वाली प्राथमिक भाषा",
+    "type": "CHOICE", "domainIndex": 1,
+    "domainName_en": "Basic Information", "domainName_hi": "बुनियादी जानकारी",
+    "options_en": ["Hindi", "English", "Tamil", "Telugu", "Bengali", "Marathi", "Other"],
+    "options_hi": ["हिन्दी", "अंग्रेज़ी", "तमिल", "तेलुगु", "बंगाली", "मराठी", "अन्य"]
+  },
+  {
+    "index": 5, "code": "L1_5",
+    "text_en": "Has the child been previously diagnosed with any developmental condition?",
+    "text_hi": "क्या बच्चे को पहले किसी विकासात्मक स्थिति का निदान हुआ है?",
+    "description_en": "Prior developmental or neurological diagnosis history",
+    "description_hi": "पूर्व विकासात्मक या न्यूरोलॉजिकल निदान इतिहास",
+    "type": "CHOICE", "domainIndex": 2,
+    "domainName_en": "Medical History", "domainName_hi": "चिकित्सा इतिहास",
+    "options_en": ["Yes", "No", "Not sure"],
+    "options_hi": ["हाँ", "नहीं", "पता नहीं"]
+  },
+  {
+    "index": 6, "code": "L1_6",
+    "text_en": "If yes, please describe the diagnosis.",
+    "text_hi": "यदि हाँ, तो कृपया निदान का वर्णन करें।",
+    "description_en": "Details of any prior diagnosis — condition name, age at diagnosis, diagnosing professional",
+    "description_hi": "किसी भी पूर्व निदान का विवरण — स्थिति का नाम, निदान के समय आयु, निदान करने वाले पेशेवर",
+    "type": "TEXT", "domainIndex": 2,
+    "domainName_en": "Medical History", "domainName_hi": "चिकित्सा इतिहास",
+    "options_en": null, "options_hi": null
+  },
+  {
+    "index": 7, "code": "L1_7",
+    "text_en": "Is the child currently on any medication?",
+    "text_hi": "क्या बच्चा वर्तमान में कोई दवा ले रहा है?",
+    "description_en": "Current medication status",
+    "description_hi": "वर्तमान दवा की स्थिति",
+    "type": "CHOICE", "domainIndex": 2,
+    "domainName_en": "Medical History", "domainName_hi": "चिकित्सा इतिहास",
+    "options_en": ["Yes", "No"],
+    "options_hi": ["हाँ", "नहीं"]
+  },
+  {
+    "index": 8, "code": "L1_8",
+    "text_en": "Is the child currently receiving any therapy or intervention?",
+    "text_hi": "क्या बच्चा वर्तमान में कोई थेरेपी या हस्तक्षेप प्राप्त कर रहा है?",
+    "description_en": "Current therapy or intervention programs such as speech therapy, occupational therapy, ABA",
+    "description_hi": "वर्तमान थेरेपी या हस्तक्षेप कार्यक्रम जैसे स्पीच थेरेपी, ऑक्यूपेशनल थेरेपी, एबीए",
+    "type": "CHOICE", "domainIndex": 2,
+    "domainName_en": "Medical History", "domainName_hi": "चिकित्सा इतिहास",
+    "options_en": ["Yes", "No"],
+    "options_hi": ["हाँ", "नहीं"]
+  },
+  {
+    "index": 9, "code": "L1_9",
+    "text_en": "What is the primary concern that brings you here today?",
+    "text_hi": "आज आपको यहाँ क्या प्राथमिक चिंता लेकर आई है?",
+    "description_en": "Main reason for seeking assessment — in the caregiver's own words",
+    "description_hi": "मूल्यांकन की तलाश का मुख्य कारण — देखभालकर्ता के अपने शब्दों में",
+    "type": "TEXT", "domainIndex": 3,
+    "domainName_en": "Concerns", "domainName_hi": "चिंताएँ",
+    "options_en": null, "options_hi": null
+  },
+  {
+    "index": 10, "code": "L1_10",
+    "text_en": "At what age did you first notice developmental concerns?",
+    "text_hi": "आपने पहली बार विकासात्मक चिंताएँ किस उम्र में देखीं?",
+    "description_en": "Age at which developmental concerns were first observed by the caregiver",
+    "description_hi": "वह आयु जिसमें देखभालकर्ता ने पहली बार विकासात्मक चिंताएँ देखीं",
+    "type": "TEXT", "domainIndex": 3,
+    "domainName_en": "Concerns", "domainName_hi": "चिंताएँ",
+    "options_en": null, "options_hi": null
+  }
+]
