@@ -17,12 +17,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+@SuppressWarnings("null")
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
 
@@ -52,7 +52,7 @@ class AuthServiceTest {
         loginRequest.setPassword("password123");
 
         savedUser = User.builder()
-                .id(UUID.randomUUID())
+                .id("user-id-001")
                 .fullName("Test User")
                 .email("test@example.com")
                 .passwordHash("$2a$12$encoded")
@@ -66,8 +66,8 @@ class AuthServiceTest {
         when(userRepository.existsByEmail("test@example.com")).thenReturn(false);
         when(passwordEncoder.encode("password123")).thenReturn("$2a$12$encoded");
         when(userRepository.save(any(User.class))).thenReturn(savedUser);
-        when(jwtService.generateAccessToken(any(UUID.class), eq("CAREGIVER"))).thenReturn("access-token");
-        when(jwtService.generateRefreshToken(any(UUID.class), eq("CAREGIVER"))).thenReturn("refresh-token");
+        when(jwtService.generateAccessToken(anyString(), eq("CAREGIVER"))).thenReturn("access-token");
+        when(jwtService.generateRefreshToken(anyString(), eq("CAREGIVER"))).thenReturn("refresh-token");
 
         AuthResponse response = authService.register(registerRequest);
 
@@ -91,8 +91,8 @@ class AuthServiceTest {
     void login_success() {
         when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(savedUser));
         when(passwordEncoder.matches("password123", "$2a$12$encoded")).thenReturn(true);
-        when(jwtService.generateAccessToken(any(UUID.class), eq("CAREGIVER"))).thenReturn("access-token");
-        when(jwtService.generateRefreshToken(any(UUID.class), eq("CAREGIVER"))).thenReturn("refresh-token");
+        when(jwtService.generateAccessToken(anyString(), eq("CAREGIVER"))).thenReturn("access-token");
+        when(jwtService.generateRefreshToken(anyString(), eq("CAREGIVER"))).thenReturn("refresh-token");
 
         AuthResponse response = authService.login(loginRequest);
 

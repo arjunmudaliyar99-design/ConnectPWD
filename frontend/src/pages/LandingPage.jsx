@@ -42,8 +42,13 @@ export default function LandingPage() {
         ? await authApi.login(payload)
         : await authApi.register(payload);
 
-      setAuth(data.data);
-      navigate('/consent');
+      const authData = data.data;
+      setAuth(authData);
+      if (authData.role === 'ADMIN') {
+        navigate('/admin');
+      } else {
+        navigate('/triage');
+      }
     } catch (err) {
       setError(err.response?.data?.error || 'Something went wrong');
     } finally {

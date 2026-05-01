@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * IsaaScoreService — the ONLY class that performs ISAA scoring.
@@ -23,6 +22,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@SuppressWarnings("null")
 public class IsaaScoreService {
 
     private final ResponseRepository responseRepository;
@@ -41,7 +41,7 @@ public class IsaaScoreService {
     // Domain 6 Cognitive Component: items 37–40
 
     @Transactional
-    public IsaaScoreDTO computeScore(UUID sessionId, UUID userId, String userRole) {
+    public IsaaScoreDTO computeScore(String sessionId, String userId, String userRole) {
         AssessmentSession session = sessionService.findById(sessionId);
         sessionService.checkAccess(session, userId, userRole);
 
@@ -94,7 +94,7 @@ public class IsaaScoreService {
         return toDTO(score);
     }
 
-    public IsaaScoreDTO getScore(UUID sessionId, UUID userId, String userRole) {
+    public IsaaScoreDTO getScore(String sessionId, String userId, String userRole) {
         AssessmentSession session = sessionService.findById(sessionId);
         sessionService.checkAccess(session, userId, userRole);
 

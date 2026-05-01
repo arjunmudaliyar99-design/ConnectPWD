@@ -10,8 +10,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/api/v1/answer")
 @RequiredArgsConstructor
@@ -24,20 +22,21 @@ public class AnswerController {
             @Valid @RequestBody TextAnswerRequest request,
             Authentication authentication) {
 
-        UUID userId = (UUID) authentication.getPrincipal();
+        String userId = (String) authentication.getPrincipal();
         AnswerResponse response = answerService.submitTextAnswer(userId, request);
         return ResponseEntity.ok(ApiResponse.ok(response));
     }
 
     @PostMapping("/voice")
     public ResponseEntity<ApiResponse<AnswerResponse>> submitVoiceAnswer(
-            @RequestParam UUID sessionId,
+            @RequestParam String sessionId,
             @RequestParam String questionCode,
             @RequestParam("audio") MultipartFile audio,
+            @RequestParam(required = false) String transcript,
             Authentication authentication) {
 
-        UUID userId = (UUID) authentication.getPrincipal();
-        AnswerResponse response = answerService.submitVoiceAnswer(userId, sessionId, questionCode, audio);
+        String userId = (String) authentication.getPrincipal();
+        AnswerResponse response = answerService.submitVoiceAnswer(userId, sessionId, questionCode, audio, transcript);
         return ResponseEntity.ok(ApiResponse.ok(response));
     }
 }

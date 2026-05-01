@@ -1,0 +1,179 @@
+{
+  "module": "PARENT",
+  "title": "Parent Questionnaire for Child Assessment",
+  "sections": [
+    {
+      "sectionId": "PQ_S1",
+      "title": "Communication",
+      "subtitle": "Questions about how your child communicates",
+      "questions": [
+        {
+          "id": "PQ_1",
+          "text": "Does your child respond when their name is called?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes", "Sometimes", "No"]
+        },
+        {
+          "id": "PQ_2",
+          "text": "Does your child use words or sentences to communicate needs?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes", "Sometimes", "No"]
+        },
+        {
+          "id": "PQ_3",
+          "text": "Does your child point to objects they want or find interesting?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes", "Sometimes", "No"]
+        },
+        {
+          "id": "PQ_4",
+          "text": "Does your child repeat words or phrases out of context (echolalia)?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes", "Sometimes", "No"]
+        },
+        {
+          "id": "PQ_5",
+          "text": "How well does your child understand verbal instructions?",
+          "responseType": "RATING_SCALE",
+          "options": ["1 - Not at all", "2", "3", "4", "5 - Very well"]
+        }
+      ]
+    },
+    {
+      "sectionId": "PQ_S2",
+      "title": "Social Interaction",
+      "subtitle": "Questions about your child's relationships and social behaviour",
+      "questions": [
+        {
+          "id": "PQ_6",
+          "text": "Does your child enjoy playing with other children?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes", "Sometimes", "No"]
+        },
+        {
+          "id": "PQ_7",
+          "text": "Does your child make eye contact during interactions?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes", "Sometimes", "No"]
+        },
+        {
+          "id": "PQ_8",
+          "text": "Does your child show affection to familiar people?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes", "Sometimes", "No"]
+        },
+        {
+          "id": "PQ_9",
+          "text": "Does your child prefer to play alone rather than with others?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes", "Sometimes", "No"]
+        },
+        {
+          "id": "PQ_10",
+          "text": "How would you rate your child's overall social skills?",
+          "responseType": "RATING_SCALE",
+          "options": ["1 - Very poor", "2", "3", "4", "5 - Excellent"]
+        }
+      ]
+    },
+    {
+      "sectionId": "PQ_S3",
+      "title": "Behaviour",
+      "subtitle": "Questions about your child's behaviour and daily routines",
+      "questions": [
+        {
+          "id": "PQ_11",
+          "text": "Does your child have repetitive body movements (rocking, hand-flapping)?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes", "Sometimes", "No"]
+        },
+        {
+          "id": "PQ_12",
+          "text": "Does your child insist on specific routines and become upset when they change?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes", "Sometimes", "No"]
+        },
+        {
+          "id": "PQ_13",
+          "text": "Does your child show self-injurious behaviour (head banging, biting self)?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes", "Sometimes", "No"]
+        },
+        {
+          "id": "PQ_14",
+          "text": "Does your child show aggression toward others?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes", "Sometimes", "No"]
+        },
+        {
+          "id": "PQ_15",
+          "text": "Describe any specific behaviour challenges you observe at home.",
+          "responseType": "SUBJECTIVE_150",
+          "options": null
+        }
+      ]
+    },
+    {
+      "sectionId": "PQ_S4",
+      "title": "Sensory",
+      "subtitle": "Questions about how your child responds to sensory input",
+      "questions": [
+        {
+          "id": "PQ_16",
+          "text": "Does your child show unusual sensitivity to sounds (covering ears, distress)?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes", "Sometimes", "No"]
+        },
+        {
+          "id": "PQ_17",
+          "text": "Does your child avoid or seek out touch?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Avoids touch", "Seeks touch", "Neither"]
+        },
+        {
+          "id": "PQ_18",
+          "text": "Does your child appear to have a high or low pain threshold?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["High threshold (unaware of pain)", "Low threshold (very sensitive)", "Typical"]
+        }
+      ]
+    },
+    {
+      "sectionId": "PQ_S5",
+      "title": "Daily Living",
+      "subtitle": "Questions about self-care and independence",
+      "questions": [
+        {
+          "id": "PQ_19",
+          "text": "Can your child dress and undress independently?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes", "With help", "No"]
+        },
+        {
+          "id": "PQ_20",
+          "text": "Can your child manage personal hygiene independently?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes", "With help", "No"]
+        },
+        {
+          "id": "PQ_21",
+          "text": "How many hours does your child sleep per night on average?",
+          "responseType": "NUMBER",
+          "options": null
+        },
+        {
+          "id": "PQ_22",
+          "text": "Describe your child's eating habits and any food-related concerns.",
+          "responseType": "DESCRIPTIVE_50",
+          "options": null
+        },
+        {
+          "id": "PQ_23",
+          "text": "What do you feel are your child's greatest strengths?",
+          "responseType": "OPEN_ENDED_300",
+          "options": null
+        }
+      ]
+    }
+  ]
+}

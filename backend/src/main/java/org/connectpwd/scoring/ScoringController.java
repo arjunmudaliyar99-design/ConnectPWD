@@ -10,8 +10,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/api/v1/session/{sessionId}/score")
 @RequiredArgsConstructor
@@ -22,9 +20,9 @@ public class ScoringController {
     @PostMapping
     @PreAuthorize("hasAnyRole('CAREGIVER', 'PSYCHOLOGIST', 'ADMIN')")
     public ResponseEntity<ApiResponse<IsaaScoreDTO>> computeScore(
-            @PathVariable UUID sessionId,
+            @PathVariable String sessionId,
             Authentication authentication) {
-        UUID userId = UUID.fromString(authentication.getName());
+        String userId = authentication.getName();
         String role = authentication.getAuthorities().stream()
                 .findFirst()
                 .map(GrantedAuthority::getAuthority)
@@ -37,9 +35,9 @@ public class ScoringController {
     @GetMapping
     @PreAuthorize("hasAnyRole('CAREGIVER', 'PSYCHOLOGIST', 'ADMIN')")
     public ResponseEntity<ApiResponse<IsaaScoreDTO>> getScore(
-            @PathVariable UUID sessionId,
+            @PathVariable String sessionId,
             Authentication authentication) {
-        UUID userId = UUID.fromString(authentication.getName());
+        String userId = authentication.getName();
         String role = authentication.getAuthorities().stream()
                 .findFirst()
                 .map(GrantedAuthority::getAuthority)

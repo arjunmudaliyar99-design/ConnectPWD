@@ -20,22 +20,21 @@ import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.URI;
 import java.time.Duration;
-import java.util.UUID;
 
 @Slf4j
 @Service
 public class R2StorageService implements StorageService {
 
-    @Value("${r2.account-id}")
+    @Value("${r2.account-id:}")
     private String accountId;
 
-    @Value("${r2.access-key-id}")
+    @Value("${r2.access-key-id:}")
     private String accessKeyId;
 
-    @Value("${r2.secret-access-key}")
+    @Value("${r2.secret-access-key:}")
     private String secretAccessKey;
 
-    @Value("${r2.bucket-name}")
+    @Value("${r2.bucket-name:connectpwd}")
     private String bucketName;
 
     private S3Client s3Client;
@@ -65,7 +64,7 @@ public class R2StorageService implements StorageService {
     }
 
     @Override
-    public String uploadVoice(UUID sessionId, String questionCode, MultipartFile file) {
+    public String uploadVoice(String sessionId, String questionCode, MultipartFile file) {
         String key = "voice/" + sessionId + "/" + questionCode + ".webm";
         try {
             PutObjectRequest putRequest = PutObjectRequest.builder()
@@ -84,7 +83,7 @@ public class R2StorageService implements StorageService {
     }
 
     @Override
-    public String uploadPdf(UUID sessionId, byte[] pdfBytes) {
+    public String uploadPdf(String sessionId, byte[] pdfBytes) {
         String key = "reports/" + sessionId + "/report.pdf";
         PutObjectRequest putRequest = PutObjectRequest.builder()
                 .bucket(bucketName)

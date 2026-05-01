@@ -2,12 +2,12 @@ package org.connectpwd.session;
 
 import org.connectpwd.common.AppException;
 import org.connectpwd.common.AuditLog;
-import org.connectpwd.consent.Consent;
-import org.connectpwd.consent.ConsentService;
 import org.connectpwd.question.QuestionBank;
+import org.connectpwd.question.ModuleQuestionBank;
 import org.connectpwd.question.dto.QuestionDTO;
 import org.connectpwd.session.dto.SessionResponse;
 import org.connectpwd.session.dto.StartSessionRequest;
+import org.connectpwd.session.dto.TriageRequestDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,54 +15,44 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.UUID;
-
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+@SuppressWarnings("null")
 @ExtendWith(MockitoExtension.class)
 class SessionFlowIntegrationTest {
 
     @Mock private SessionRepository sessionRepository;
-    @Mock private ConsentService consentService;
     @Mock private QuestionBank questionBank;
+    @Mock private ModuleQuestionBank moduleQuestionBank;
     @Mock private AuditLog auditLog;
 
     @InjectMocks
     private SessionService sessionService;
 
-    private UUID userId;
-    private UUID consentId;
-    private Consent consent;
+    private String userId;
 
     @BeforeEach
     void setUp() {
-        userId = UUID.randomUUID();
-        consentId = UUID.randomUUID();
-
-        consent = Consent.builder()
-                .id(consentId)
-                .userId(userId)
-                .clientName("Test Child")
-                .legalName("Test Parent")
-                .agreed(true)
-                .build();
+        userId = "user-id-001";
     }
 
     @Test
     void startSession_success_returnsFirstQuestion() {
         StartSessionRequest request = new StartSessionRequest();
-        request.setConsentId(consentId);
+        request.setModuleType("PARENT");
         request.setLanguage("en");
-
-        when(consentService.findById(consentId)).thenReturn(consent);
-        when(sessionRepository.existsByConsentId(consentId)).thenReturn(false);
+        TriageRequestDTO triage = new TriageRequestDTO();
+        triage.setSeekingFor("child");
+        triage.setAge(8);
+        triage.setChallengeType("ASD");
+        request.setTriageData(triage);
 
         AssessmentSession savedSession = AssessmentSession.builder()
-                .id(UUID.randomUUID())
+                .id("session-id-001")
                 .userId(userId)
-                .consentId(consentId)
+                .moduleType("PARENT")
                 .currentLevel(1)
                 .currentQuestionIndex(0)
                 .language("en")
@@ -72,9 +62,10 @@ class SessionFlowIntegrationTest {
 
         QuestionDTO firstQ = QuestionDTO.builder()
                 .code("L1_1")
-                .textEn("What is the child's full name?")
+                .text("What is the child's full name?")
                 .build();
-        when(questionBank.toDTO(1, 0, "en")).thenReturn(firstQ);
+        when(moduleQuestionBank.toDTO("PARENT", 0)).thenReturn(firstQ);
+        when(moduleQuestionBank.getTotalQuestions("PARENT")).thenReturn(50);
 
         SessionResponse response = sessionService.startSession(userId, request);
 
@@ -83,65 +74,24 @@ class SessionFlowIntegrationTest {
         assertThat(response.getStatus()).isEqualTo("IN_PROGRESS");
         assertThat(response.getCurrentQuestion().getCode()).isEqualTo("L1_1");
         verify(sessionRepository).save(any(AssessmentSession.class));
-        verify(auditLog).logSessionStart(eq(userId), any(UUID.class));
+        verify(auditLog).logSessionStart(eq(userId), anyString());
     }
 
     @Test
-    void startSession_consentNotAgreed_throwsException() {
-        consent.setAgreed(false);
+    void startSession_nullTriageData_throwsException() {
         StartSessionRequest request = new StartSessionRequest();
-        request.setConsentId(consentId);
-
-        when(consentService.findById(consentId)).thenReturn(consent);
-
+        request.setModuleType("PARENT");
+        request.setLanguage("en");
+        // triageData is null — should throw NullPointerException or AppException
         assertThatThrownBy(() -> sessionService.startSession(userId, request))
-                .isInstanceOf(AppException.class)
-                .hasMessageContaining("Consent has not been agreed");
-    }
-
-    @Test
-    void startSession_consentNotFound_throwsException() {
-        StartSessionRequest request = new StartSessionRequest();
-        request.setConsentId(consentId);
-
-        when(consentService.findById(consentId)).thenReturn(null);
-
-        assertThatThrownBy(() -> sessionService.startSession(userId, request))
-                .isInstanceOf(AppException.class)
-                .hasMessageContaining("Consent record not found");
-    }
-
-    @Test
-    void startSession_duplicateConsent_throwsConflict() {
-        StartSessionRequest request = new StartSessionRequest();
-        request.setConsentId(consentId);
-
-        when(consentService.findById(consentId)).thenReturn(consent);
-        when(sessionRepository.existsByConsentId(consentId)).thenReturn(true);
-
-        assertThatThrownBy(() -> sessionService.startSession(userId, request))
-                .isInstanceOf(AppException.class)
-                .hasMessageContaining("A session already exists");
-    }
-
-    @Test
-    void startSession_wrongUser_throwsForbidden() {
-        UUID otherUserId = UUID.randomUUID();
-        StartSessionRequest request = new StartSessionRequest();
-        request.setConsentId(consentId);
-
-        when(consentService.findById(consentId)).thenReturn(consent);
-
-        assertThatThrownBy(() -> sessionService.startSession(otherUserId, request))
-                .isInstanceOf(AppException.class)
-                .hasMessageContaining("Consent does not belong to this user");
+                .isInstanceOf(Exception.class);
     }
 
     @Test
     void checkAccess_psychologist_canAccessAnySession() {
         AssessmentSession session = AssessmentSession.builder()
-                .id(UUID.randomUUID())
-                .userId(UUID.randomUUID()) // different user
+                .id("session-id-002")
+                .userId("other-user-id") // different user
                 .build();
 
         assertThatCode(() -> sessionService.checkAccess(session, userId, "PSYCHOLOGIST"))
@@ -151,8 +101,8 @@ class SessionFlowIntegrationTest {
     @Test
     void checkAccess_admin_canAccessAnySession() {
         AssessmentSession session = AssessmentSession.builder()
-                .id(UUID.randomUUID())
-                .userId(UUID.randomUUID())
+                .id("session-id-003")
+                .userId("another-user-id")
                 .build();
 
         assertThatCode(() -> sessionService.checkAccess(session, userId, "ADMIN"))
@@ -162,8 +112,8 @@ class SessionFlowIntegrationTest {
     @Test
     void checkAccess_caregiver_cannotAccessOtherSession() {
         AssessmentSession session = AssessmentSession.builder()
-                .id(UUID.randomUUID())
-                .userId(UUID.randomUUID()) // different user
+                .id("session-id-004")
+                .userId("yet-another-user") // different user
                 .build();
 
         assertThatThrownBy(() -> sessionService.checkAccess(session, userId, "CAREGIVER"))
@@ -174,7 +124,7 @@ class SessionFlowIntegrationTest {
     @Test
     void advanceQuestion_incrementsIndex() {
         AssessmentSession session = AssessmentSession.builder()
-                .id(UUID.randomUUID())
+                .id("session-id-005")
                 .userId(userId)
                 .currentLevel(1)
                 .currentQuestionIndex(2)
@@ -192,7 +142,7 @@ class SessionFlowIntegrationTest {
     @Test
     void advanceQuestion_lastQuestion_setsLevelComplete() {
         AssessmentSession session = AssessmentSession.builder()
-                .id(UUID.randomUUID())
+                .id("session-id-006")
                 .userId(userId)
                 .currentLevel(1)
                 .currentQuestionIndex(9)

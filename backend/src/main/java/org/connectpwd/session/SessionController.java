@@ -11,8 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/api/v1/session")
 @RequiredArgsConstructor
@@ -25,17 +23,17 @@ public class SessionController {
             @Valid @RequestBody StartSessionRequest request,
             Authentication authentication) {
 
-        UUID userId = (UUID) authentication.getPrincipal();
+        String userId = (String) authentication.getPrincipal();
         SessionResponse response = sessionService.startSession(userId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok(response));
     }
 
     @GetMapping("/{sessionId}")
     public ResponseEntity<ApiResponse<SessionResponse>> getSession(
-            @PathVariable UUID sessionId,
+            @PathVariable String sessionId,
             Authentication authentication) {
 
-        UUID userId = (UUID) authentication.getPrincipal();
+        String userId = (String) authentication.getPrincipal();
         String role = authentication.getAuthorities().stream()
                 .findFirst()
                 .map(GrantedAuthority::getAuthority)
@@ -48,11 +46,11 @@ public class SessionController {
 
     @PostMapping("/{sessionId}/advance")
     public ResponseEntity<ApiResponse<SessionResponse>> advanceLevel(
-            @PathVariable UUID sessionId,
+            @PathVariable String sessionId,
             @RequestBody java.util.Map<String, Integer> body,
             Authentication authentication) {
 
-        UUID userId = (UUID) authentication.getPrincipal();
+        String userId = (String) authentication.getPrincipal();
         String role = authentication.getAuthorities().stream()
                 .findFirst()
                 .map(GrantedAuthority::getAuthority)

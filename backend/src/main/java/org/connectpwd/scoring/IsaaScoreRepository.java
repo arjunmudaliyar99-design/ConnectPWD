@@ -1,15 +1,14 @@
 package org.connectpwd.scoring;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface IsaaScoreRepository extends JpaRepository<IsaaScore, UUID> {
+public interface IsaaScoreRepository extends MongoRepository<IsaaScore, String> {
 
-    Optional<IsaaScore> findBySessionId(UUID sessionId);
+    Optional<IsaaScore> findBySessionId(String sessionId);
 
-    boolean existsBySessionId(UUID sessionId);
+    boolean existsBySessionId(String sessionId);
 }

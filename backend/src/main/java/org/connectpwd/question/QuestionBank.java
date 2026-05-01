@@ -16,6 +16,7 @@ import java.util.*;
 @Slf4j
 @Component
 @Getter
+@SuppressWarnings("null")
 public class QuestionBank {
 
     private final Map<Integer, List<QuestionItem>> levelQuestions = new HashMap<>();

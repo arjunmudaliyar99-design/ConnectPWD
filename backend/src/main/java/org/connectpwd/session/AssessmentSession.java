@@ -1,13 +1,14 @@
 package org.connectpwd.session;
 
-import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.Instant;
-import java.util.UUID;
 
-@Entity
-@Table(name = "assessment_session")
+@Document(collection = "assessment_sessions")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,36 +17,42 @@ import java.util.UUID;
 public class AssessmentSession {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private String id;
 
-    @Column(name = "user_id", nullable = false)
-    private UUID userId;
+    @Indexed
+    @Field("user_id")
+    private String userId;
 
-    @Column(name = "consent_id", nullable = false, unique = true)
-    private UUID consentId;
+    @Field("module_type")
+    private String moduleType;
 
-    @Column(name = "current_level", nullable = false)
+    @Field("triage_seeking_for")
+    private String triageSeekingFor;
+
+    @Field("triage_age")
+    private Integer triageAge;
+
+    @Field("triage_challenge_type")
+    private String triageChallengeType;
+
+    @Field("current_level")
     @Builder.Default
     private int currentLevel = 1;
 
-    @Column(name = "current_question_index", nullable = false)
+    @Field("current_question_index")
     @Builder.Default
     private int currentQuestionIndex = 0;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 50)
     @Builder.Default
     private SessionStatus status = SessionStatus.IN_PROGRESS;
 
-    @Column(nullable = false, length = 10)
     @Builder.Default
     private String language = "en";
 
-    @Column(name = "started_at", nullable = false)
+    @Field("started_at")
     @Builder.Default
     private Instant startedAt = Instant.now();
 
-    @Column(name = "completed_at")
+    @Field("completed_at")
     private Instant completedAt;
 }

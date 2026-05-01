@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
+@SuppressWarnings("null")
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

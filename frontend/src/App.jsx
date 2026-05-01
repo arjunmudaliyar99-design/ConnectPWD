@@ -1,13 +1,22 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './store/authStore';
 import LandingPage from './pages/LandingPage';
-import ConsentPage from './pages/ConsentPage';
+import TriagePage from './pages/TriagePage';
 import AssessmentPage from './pages/AssessmentPage';
+import AdminPage from './pages/admin/AdminPage';
 import ErrorBoundary from './components/ErrorBoundary';
 
 function ProtectedRoute({ children }) {
   const token = useAuthStore((s) => s.accessToken);
   if (!token) return <Navigate to="/" replace />;
+  return children;
+}
+
+function AdminRoute({ children }) {
+  const token = useAuthStore((s) => s.accessToken);
+  const role  = useAuthStore((s) => s.role);
+  if (!token)           return <Navigate to="/" replace />;
+  if (role !== 'ADMIN') return <Navigate to="/" replace />;
   return children;
 }
 
@@ -18,10 +27,10 @@ export default function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route
-            path="/consent"
+            path="/triage"
             element={
               <ProtectedRoute>
-                <ConsentPage />
+                <TriagePage />
               </ProtectedRoute>
             }
           />
@@ -31,6 +40,14 @@ export default function App() {
               <ProtectedRoute>
                 <AssessmentPage />
               </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <AdminPage />
+              </AdminRoute>
             }
           />
           <Route path="*" element={<Navigate to="/" replace />} />

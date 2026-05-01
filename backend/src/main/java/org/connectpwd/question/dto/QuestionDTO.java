@@ -17,9 +17,13 @@ public class QuestionDTO {
     private int level;
     private String domain;
     private String type;
+    private String responseType;
     private String text;
     private String description;
     private List<String> options;
+    private String sectionId;
+    private String sectionTitle;
+    private String sectionSubtitle;
     private boolean isFirstInDomain;
     private boolean isLastInLevel;
     private int totalInLevel;

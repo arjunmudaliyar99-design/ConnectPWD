@@ -1,13 +1,14 @@
 package org.connectpwd.report;
 
-import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.Instant;
-import java.util.UUID;
 
-@Entity
-@Table(name = "report")
+@Document(collection = "reports")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,22 +17,21 @@ import java.util.UUID;
 public class Report {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private String id;
 
-    @Column(name = "session_id", nullable = false, unique = true)
-    private UUID sessionId;
+    @Indexed(unique = true)
+    @Field("session_id")
+    private String sessionId;
 
-    @Column(name = "isaa_score_id", nullable = false)
-    private UUID isaaScoreId;
+    @Field("isaa_score_id")
+    private String isaaScoreId;
 
-    @Column(name = "pdf_url", nullable = false, length = 500)
+    @Field("pdf_url")
     private String pdfUrl;
 
-    @Column(nullable = false, length = 10)
     private String language;
 
-    @Column(name = "generated_at", nullable = false)
+    @Field("generated_at")
     @Builder.Default
     private Instant generatedAt = Instant.now();
 }

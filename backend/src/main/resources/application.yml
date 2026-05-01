@@ -5,31 +5,13 @@ spring:
   application:
     name: connectpwd-backend
 
-  datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:connectpwd}
-    username: ${DB_USER:postgres}
-    password: ${DB_PASS:postgres}
-    driver-class-name: org.postgresql.Driver
-    hikari:
-      maximum-pool-size: 10
-      minimum-idle: 2
-
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    open-in-view: false
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: false
-
   data:
     mongodb:
-      uri: mongodb://${MONGO_USER:mongo}:${MONGO_PASS:mongo}@${MONGO_HOST:localhost}:${MONGO_PORT:27017}/${MONGO_DB:connectpwd}?authSource=admin
+      uri: ${MONGO_URI:mongodb+srv://connectpwd:Arjun%401234@cluster0.ieztbuc.mongodb.net/connectpwd?appName=Cluster0}
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASS:}
+      password: ${REDIS_PASS:connectpwd_dev}
 
   servlet:
     multipart:
@@ -37,18 +19,18 @@ spring:
       max-request-size: 10MB
 
 jwt:
-  secret: ${JWT_SECRET}
-  access-expiration: 900000     # 15 minutes
-  refresh-expiration: 604800000 # 7 days
+  secret: ${JWT_SECRET:default-dev-secret-must-be-at-least-256-bits-long-for-hs256-algorithm}
+  access-expiry-ms: ${JWT_ACCESS_EXPIRY_MS:900000}      # 15 minutes
+  refresh-expiry-ms: ${JWT_REFRESH_EXPIRY_MS:604800000} # 7 days
 
 cors:
   allowed-origins: ${CORS_ORIGINS:http://localhost:5173}
 
 r2:
-  endpoint: ${R2_ENDPOINT}
-  access-key: ${R2_ACCESS_KEY}
-  secret-key: ${R2_SECRET_KEY}
-  bucket: ${R2_BUCKET:connectpwd}
+  account-id: ${R2_ACCOUNT_ID:}
+  access-key-id: ${R2_ACCESS_KEY_ID:}
+  secret-access-key: ${R2_SECRET_ACCESS_KEY:}
+  bucket-name: ${R2_BUCKET:connectpwd}
   public-url: ${R2_PUBLIC_URL:}
 
 logging:
@@ -62,14 +44,6 @@ spring:
     activate:
       on-profile: dev
 
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        format_sql: true
-    show-sql: true
-
 logging:
   level:
     org.connectpwd: DEBUG
@@ -81,9 +55,7 @@ spring:
     activate:
       on-profile: prod
 
-  datasource:
-    hikari:
-      maximum-pool-size: 20
+  # No datasource — all data stored in MongoDB Atlas
 
   jpa:
     hibernate:

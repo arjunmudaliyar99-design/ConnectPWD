@@ -5,6 +5,8 @@ import org.connectpwd.answer.dto.AnswerResponse;
 import org.connectpwd.answer.dto.TextAnswerRequest;
 import org.connectpwd.common.AppException;
 import org.connectpwd.common.ErrorCode;
+import org.connectpwd.question.ModuleQuestion;
+import org.connectpwd.question.ModuleQuestionBank;
 import org.connectpwd.question.QuestionBank;
 import org.connectpwd.question.QuestionItem;
 import org.connectpwd.question.dto.QuestionDTO;
@@ -15,46 +17,63 @@ import org.connectpwd.storage.StorageService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
+@SuppressWarnings("null")
 public class AnswerService {
 
     private final ResponseRepository responseRepository;
     private final SessionService sessionService;
     private final QuestionBank questionBank;
+    private final ModuleQuestionBank moduleQuestionBank;
     private final StorageService storageService;
 
-    public AnswerResponse submitTextAnswer(UUID userId, TextAnswerRequest request) {
+    public AnswerResponse submitTextAnswer(String userId, TextAnswerRequest request) {
         AssessmentSession session = sessionService.findById(request.getSessionId());
         sessionService.checkAccess(session, userId, null);
         validateSessionActive(session);
 
-        QuestionItem question = questionBank.findByCode(session.getCurrentLevel(), request.getQuestionCode());
-        if (question == null) {
-            throw AppException.notFound(ErrorCode.QUESTION_NOT_FOUND, "Question not found: " + request.getQuestionCode());
-        }
-
         if (responseRepository.findBySessionIdAndQuestionCode(
-                session.getId().toString(), request.getQuestionCode()).isPresent()) {
+                session.getId(), request.getQuestionCode()).isPresent()) {
             throw AppException.conflict(ErrorCode.ANSWER_ALREADY_EXISTS, "Answer already submitted for this question");
         }
 
-        int questionIndex = questionBank.findIndexByCode(session.getCurrentLevel(), request.getQuestionCode());
-        boolean isHindi = "hi".equals(session.getLanguage());
-
-        ResponseDocument doc = ResponseDocument.builder()
-                .sessionId(session.getId().toString())
-                .level(session.getCurrentLevel())
-                .questionIndex(questionIndex)
-                .questionCode(request.getQuestionCode())
-                .domain(isHindi ? question.getDomainNameHi() : question.getDomainNameEn())
-                .questionText(isHindi ? question.getTextHi() : question.getTextEn())
-                .answerType(request.getAnswerType())
-                .answerText(request.getAnswerText())
-                .scaleValue(request.getScaleValue())
-                .build();
+        ResponseDocument doc;
+        if (session.getModuleType() != null) {
+            ModuleQuestion question = moduleQuestionBank.findById(session.getModuleType(), request.getQuestionCode());
+            if (question == null) {
+                throw AppException.notFound(ErrorCode.QUESTION_NOT_FOUND, "Question not found: " + request.getQuestionCode());
+            }
+            doc = ResponseDocument.builder()
+                    .sessionId(session.getId())
+                    .level(1)
+                    .questionIndex(question.getFlatIndex())
+                    .questionCode(request.getQuestionCode())
+                    .domain(question.getSectionTitle())
+                    .questionText(question.getText())
+                    .answerType(request.getAnswerType())
+                    .answerText(request.getAnswerText())
+                    .scaleValue(request.getScaleValue())
+                    .build();
+        } else {
+            QuestionItem question = questionBank.findByCode(session.getCurrentLevel(), request.getQuestionCode());
+            if (question == null) {
+                throw AppException.notFound(ErrorCode.QUESTION_NOT_FOUND, "Question not found: " + request.getQuestionCode());
+            }
+            int questionIndex = questionBank.findIndexByCode(session.getCurrentLevel(), request.getQuestionCode());
+            boolean isHindi = "hi".equals(session.getLanguage());
+            doc = ResponseDocument.builder()
+                    .sessionId(session.getId())
+                    .level(session.getCurrentLevel())
+                    .questionIndex(questionIndex)
+                    .questionCode(request.getQuestionCode())
+                    .domain(isHindi ? question.getDomainNameHi() : question.getDomainNameEn())
+                    .questionText(isHindi ? question.getTextHi() : question.getTextEn())
+                    .answerType(request.getAnswerType())
+                    .answerText(request.getAnswerText())
+                    .scaleValue(request.getScaleValue())
+                    .build();
+        }
 
         responseRepository.save(doc);
         sessionService.advanceQuestion(session);
@@ -62,35 +81,56 @@ public class AnswerService {
         return buildAnswerResponse(session);
     }
 
-    public AnswerResponse submitVoiceAnswer(UUID userId, UUID sessionId, String questionCode, MultipartFile audio) {
+    public AnswerResponse submitVoiceAnswer(String userId, String sessionId, String questionCode, MultipartFile audio, String transcript) {
         AssessmentSession session = sessionService.findById(sessionId);
         sessionService.checkAccess(session, userId, null);
         validateSessionActive(session);
 
-        QuestionItem question = questionBank.findByCode(session.getCurrentLevel(), questionCode);
-        if (question == null) {
-            throw AppException.notFound(ErrorCode.QUESTION_NOT_FOUND, "Question not found: " + questionCode);
-        }
-
         if (responseRepository.findBySessionIdAndQuestionCode(
-                session.getId().toString(), questionCode).isPresent()) {
+                session.getId(), questionCode).isPresent()) {
             throw AppException.conflict(ErrorCode.ANSWER_ALREADY_EXISTS, "Answer already submitted for this question");
         }
 
         String audioKey = storageService.uploadVoice(sessionId, questionCode, audio);
-        int questionIndex = questionBank.findIndexByCode(session.getCurrentLevel(), questionCode);
-        boolean isHindi = "hi".equals(session.getLanguage());
+        ResponseDocument doc;
 
-        ResponseDocument doc = ResponseDocument.builder()
-                .sessionId(session.getId().toString())
-                .level(session.getCurrentLevel())
-                .questionIndex(questionIndex)
-                .questionCode(questionCode)
-                .domain(isHindi ? question.getDomainNameHi() : question.getDomainNameEn())
-                .questionText(isHindi ? question.getTextHi() : question.getTextEn())
-                .answerType("VOICE")
-                .audioKey(audioKey)
-                .build();
+        if (session.getModuleType() != null) {
+            ModuleQuestion question = moduleQuestionBank.findById(session.getModuleType(), questionCode);
+            if (question == null) {
+                throw AppException.notFound(ErrorCode.QUESTION_NOT_FOUND, "Question not found: " + questionCode);
+            }
+            doc = ResponseDocument.builder()
+                    .sessionId(session.getId())
+                    .level(1)
+                    .questionIndex(question.getFlatIndex())
+                    .questionCode(questionCode)
+                    .domain(question.getSectionTitle())
+                    .questionText(question.getText())
+                    .answerType("VOICE")
+                    .audioKey(audioKey)
+                    .transcript(transcript)
+                    .answerText(transcript)
+                    .build();
+        } else {
+            QuestionItem question = questionBank.findByCode(session.getCurrentLevel(), questionCode);
+            if (question == null) {
+                throw AppException.notFound(ErrorCode.QUESTION_NOT_FOUND, "Question not found: " + questionCode);
+            }
+            int questionIndex = questionBank.findIndexByCode(session.getCurrentLevel(), questionCode);
+            boolean isHindi = "hi".equals(session.getLanguage());
+            doc = ResponseDocument.builder()
+                    .sessionId(session.getId())
+                    .level(session.getCurrentLevel())
+                    .questionIndex(questionIndex)
+                    .questionCode(questionCode)
+                    .domain(isHindi ? question.getDomainNameHi() : question.getDomainNameEn())
+                    .questionText(isHindi ? question.getTextHi() : question.getTextEn())
+                    .answerType("VOICE")
+                    .audioKey(audioKey)
+                    .transcript(transcript)
+                    .answerText(transcript)
+                    .build();
+        }
 
         responseRepository.save(doc);
         sessionService.advanceQuestion(session);
@@ -105,16 +145,23 @@ public class AnswerService {
     }
 
     private AnswerResponse buildAnswerResponse(AssessmentSession session) {
-        // Reload session after advance
         session = sessionService.findById(session.getId());
 
+        boolean completed = session.getStatus() == SessionStatus.COMPLETED;
         boolean levelComplete = session.getStatus() == SessionStatus.LEVEL_COMPLETE;
         QuestionDTO nextQuestion = null;
         Integer nextLevel = null;
 
-        if (levelComplete) {
+        if (completed) {
+            // No next question
+        } else if (levelComplete) {
             nextLevel = session.getCurrentLevel() + 1;
             if (nextLevel > 4) nextLevel = null;
+        } else if (session.getModuleType() != null) {
+            nextQuestion = moduleQuestionBank.toDTO(
+                    session.getModuleType(),
+                    session.getCurrentQuestionIndex()
+            );
         } else {
             nextQuestion = questionBank.toDTO(
                     session.getCurrentLevel(),

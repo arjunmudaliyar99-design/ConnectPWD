@@ -1,13 +1,14 @@
 package org.connectpwd.scoring;
 
-import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.Instant;
-import java.util.UUID;
 
-@Entity
-@Table(name = "isaa_score")
+@Document(collection = "isaa_scores")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,41 +17,39 @@ import java.util.UUID;
 public class IsaaScore {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private String id;
 
-    @Column(name = "session_id", nullable = false, unique = true)
-    private UUID sessionId;
+    @Indexed(unique = true)
+    @Field("session_id")
+    private String sessionId;
 
-    @Column(name = "total_score", nullable = false)
+    @Field("total_score")
     private int totalScore;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 50)
     private SeverityLevel severity;
 
-    @Column(name = "disability_pct", nullable = false)
+    @Field("disability_pct")
     private int disabilityPct;
 
-    @Column(name = "domain1_social", nullable = false)
+    @Field("domain1_social")
     private int domain1Social;
 
-    @Column(name = "domain2_emotional", nullable = false)
+    @Field("domain2_emotional")
     private int domain2Emotional;
 
-    @Column(name = "domain3_speech", nullable = false)
+    @Field("domain3_speech")
     private int domain3Speech;
 
-    @Column(name = "domain4_behaviour", nullable = false)
+    @Field("domain4_behaviour")
     private int domain4Behaviour;
 
-    @Column(name = "domain5_sensory", nullable = false)
+    @Field("domain5_sensory")
     private int domain5Sensory;
 
-    @Column(name = "domain6_cognitive", nullable = false)
+    @Field("domain6_cognitive")
     private int domain6Cognitive;
 
-    @Column(name = "scored_at", nullable = false)
+    @Field("scored_at")
     @Builder.Default
     private Instant scoredAt = Instant.now();
 }

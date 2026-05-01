@@ -5,6 +5,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.NonNull;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,6 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.time.Duration;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class RateLimitFilter extends OncePerRequestFilter {
@@ -22,12 +25,12 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
     private static final int GENERAL_LIMIT = 100;
     private static final int AUTH_LIMIT = 10;
-    private static final Duration WINDOW = Duration.ofMinutes(1);
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+    @SuppressWarnings("null")
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
+                                    @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         String clientIp = getClientIp(request);
         String path = request.getRequestURI();
@@ -36,18 +39,23 @@ public class RateLimitFilter extends OncePerRequestFilter {
         int limit = isAuthPath ? AUTH_LIMIT : GENERAL_LIMIT;
         String key = "rate:" + (isAuthPath ? "auth:" : "gen:") + clientIp;
 
-        Long count = redisTemplate.opsForValue().increment(key);
-        if (count != null && count == 1L) {
-            redisTemplate.expire(key, WINDOW);
-        }
+        try {
+            Long count = redisTemplate.opsForValue().increment(key);
+            if (count != null && count == 1L) {
+                redisTemplate.expire(key, Duration.ofMinutes(1));
+            }
 
-        if (count != null && count > limit) {
-            response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.getWriter().write(
-                    "{\"success\":false,\"error\":\"Rate limit exceeded. Max " + limit + " requests per minute.\",\"timestamp\":\"" + java.time.Instant.now() + "\"}"
-            );
-            return;
+            if (count != null && count > limit) {
+                response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
+                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                response.getWriter().write(
+                        "{\"success\":false,\"error\":\"Rate limit exceeded. Max " + limit + " requests per minute.\",\"timestamp\":\"" + java.time.Instant.now() + "\"}"
+                );
+                return;
+            }
+        } catch (Exception e) {
+            // Redis unavailable — skip rate limiting and allow request through
+            log.warn("Rate limiting unavailable (Redis down): {}", e.getMessage());
         }
 
         filterChain.doFilter(request, response);

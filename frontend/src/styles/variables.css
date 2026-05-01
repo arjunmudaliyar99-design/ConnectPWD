@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg-primary: #0d0d0d;
+  --bg-surface: #1a1a1a;
+  --bg-elevated: #242424;
+  --border: #2e2e2e;
+  --text-primary: #e8e8e8;
+  --text-muted: #8a8a8a;
+  --accent: #d97706;
+  --accent-hover: #b45309;
+  --bot-bubble: #1e1e1e;
+  --user-bubble: #292929;
+  --radius: 16px;
+  --radius-sm: 8px;
+  --font-sans: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}

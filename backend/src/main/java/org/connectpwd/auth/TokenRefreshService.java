@@ -9,10 +9,9 @@ import org.connectpwd.user.User;
 import org.connectpwd.user.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
+@SuppressWarnings("null")
 public class TokenRefreshService {
 
     private final JwtService jwtService;
@@ -25,7 +24,7 @@ public class TokenRefreshService {
             throw AppException.unauthorized(ErrorCode.TOKEN_EXPIRED, "Refresh token expired or invalid");
         }
 
-        UUID userId = jwtService.extractUserId(refreshToken);
+        String userId = jwtService.extractUserId(refreshToken);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> AppException.unauthorized(ErrorCode.USER_NOT_FOUND, "User not found"));
 
@@ -35,7 +34,7 @@ public class TokenRefreshService {
         return AuthResponse.builder()
                 .accessToken(newAccessToken)
                 .refreshToken(newRefreshToken)
-                .userId(user.getId().toString())
+                .userId(user.getId())
                 .role(user.getRole().name())
                 .language(user.getLanguage())
                 .build();

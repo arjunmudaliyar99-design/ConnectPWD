@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.UUID;
 
 @Service
 public class JwtService {
@@ -29,20 +28,20 @@ public class JwtService {
         this.refreshExpiryMs = refreshExpiryMs;
     }
 
-    public String generateAccessToken(UUID userId, String role) {
+    public String generateAccessToken(String userId, String role) {
         return buildToken(userId, role, accessExpiryMs);
     }
 
-    public String generateRefreshToken(UUID userId, String role) {
+    public String generateRefreshToken(String userId, String role) {
         return buildToken(userId, role, refreshExpiryMs);
     }
 
-    private String buildToken(UUID userId, String role, long expiryMs) {
+    private String buildToken(String userId, String role, long expiryMs) {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + expiryMs);
 
         return Jwts.builder()
-                .subject(userId.toString())
+                .subject(userId)
                 .claim("role", role)
                 .issuedAt(now)
                 .expiration(expiry)
@@ -69,8 +68,8 @@ public class JwtService {
         }
     }
 
-    public UUID extractUserId(String token) {
-        return UUID.fromString(parseToken(token).getSubject());
+    public String extractUserId(String token) {
+        return parseToken(token).getSubject();
     }
 
     public String extractRole(String token) {

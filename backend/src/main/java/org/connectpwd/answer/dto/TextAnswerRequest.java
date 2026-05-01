@@ -9,8 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Range;
 
-import java.util.UUID;
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -18,7 +16,7 @@ import java.util.UUID;
 public class TextAnswerRequest {
 
     @NotNull(message = "Session ID is required")
-    private UUID sessionId;
+    private String sessionId;
 
     @NotBlank(message = "Question code is required")
     private String questionCode;

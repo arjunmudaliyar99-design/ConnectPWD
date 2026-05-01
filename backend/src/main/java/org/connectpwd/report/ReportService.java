@@ -5,34 +5,31 @@ import lombok.extern.slf4j.Slf4j;
 import org.connectpwd.common.AppException;
 import org.connectpwd.common.AuditLog;
 import org.connectpwd.common.ErrorCode;
-import org.connectpwd.consent.Consent;
-import org.connectpwd.consent.ConsentService;
 import org.connectpwd.report.dto.ReportResponse;
+import org.connectpwd.user.User;
+import org.connectpwd.user.UserService;
 import org.connectpwd.scoring.IsaaScore;
 import org.connectpwd.scoring.IsaaScoreRepository;
 import org.connectpwd.session.AssessmentSession;
 import org.connectpwd.session.SessionService;
 import org.connectpwd.storage.StorageService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@SuppressWarnings("null")
 public class ReportService {
 
     private final ReportRepository reportRepository;
     private final IsaaScoreRepository isaaScoreRepository;
     private final SessionService sessionService;
-    private final ConsentService consentService;
+    private final UserService userService;
     private final StorageService storageService;
     private final PdfGenerator pdfGenerator;
     private final AuditLog auditLog;
 
-    @Transactional
-    public ReportResponse generateReport(UUID sessionId, UUID userId, String userRole) {
+    public ReportResponse generateReport(String sessionId, String userId, String userRole) {
         AssessmentSession session = sessionService.findById(sessionId);
         sessionService.checkAccess(session, userId, userRole);
 
@@ -43,9 +40,9 @@ public class ReportService {
         IsaaScore score = isaaScoreRepository.findBySessionId(sessionId)
                 .orElseThrow(() -> AppException.notFound(ErrorCode.SCORE_NOT_FOUND, "ISAA score not found — score the session first"));
 
-        Consent consent = consentService.findById(session.getConsentId());
-        String clientName = consent != null ? consent.getClientName() : "Unknown";
-        String caregiverName = consent != null ? consent.getLegalName() : "Unknown";
+        User sessionUser = userService.findById(session.getUserId());
+        String clientName = sessionUser != null ? sessionUser.getFullName() : "Unknown";
+        String caregiverName = clientName;
 
         byte[] pdfBytes = pdfGenerator.generateReport(score, clientName, caregiverName, session.getLanguage());
         String pdfKey = storageService.uploadPdf(sessionId, pdfBytes);
@@ -71,7 +68,7 @@ public class ReportService {
                 .build();
     }
 
-    public ReportResponse getReport(UUID sessionId, UUID userId, String userRole) {
+    public ReportResponse getReport(String sessionId, String userId, String userRole) {
         AssessmentSession session = sessionService.findById(sessionId);
         sessionService.checkAccess(session, userId, userRole);
 

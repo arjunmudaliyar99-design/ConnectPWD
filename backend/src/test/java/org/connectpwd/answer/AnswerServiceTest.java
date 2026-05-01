@@ -18,12 +18,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+@SuppressWarnings("null")
 @ExtendWith(MockitoExtension.class)
 class AnswerServiceTest {
 
@@ -35,16 +35,16 @@ class AnswerServiceTest {
     @InjectMocks
     private AnswerService answerService;
 
-    private UUID userId;
-    private UUID sessionId;
+    private String userId;
+    private String sessionId;
     private AssessmentSession session;
     private TextAnswerRequest textRequest;
     private QuestionItem questionItem;
 
     @BeforeEach
     void setUp() {
-        userId = UUID.randomUUID();
-        sessionId = UUID.randomUUID();
+        userId = "user-id-001";
+        sessionId = "session-id-001";
 
         session = AssessmentSession.builder()
                 .id(sessionId)
@@ -74,11 +74,10 @@ class AnswerServiceTest {
         when(sessionService.findById(sessionId)).thenReturn(session);
         when(questionBank.findByCode(2, "L2_1")).thenReturn(questionItem);
         when(questionBank.findIndexByCode(2, "L2_1")).thenReturn(0);
-        when(responseRepository.findBySessionIdAndQuestionCode(sessionId.toString(), "L2_1"))
+        when(responseRepository.findBySessionIdAndQuestionCode(sessionId, "L2_1"))
                 .thenReturn(Optional.empty());
         when(responseRepository.save(any(ResponseDocument.class))).thenAnswer(inv -> inv.getArgument(0));
 
-        // After advance, session index moves to 1
         AssessmentSession advancedSession = AssessmentSession.builder()
                 .id(sessionId)
                 .userId(userId)
@@ -88,12 +87,12 @@ class AnswerServiceTest {
                 .status(SessionStatus.IN_PROGRESS)
                 .build();
         when(sessionService.findById(sessionId))
-                .thenReturn(session)       // first call
-                .thenReturn(advancedSession); // second call (after advance)
+                .thenReturn(session)
+                .thenReturn(advancedSession);
 
         QuestionDTO nextQ = QuestionDTO.builder()
                 .code("L2_2")
-                .textEn("Test question 2")
+                .text("Test question 2")
                 .build();
         when(questionBank.toDTO(2, 1, "en")).thenReturn(nextQ);
 
@@ -120,7 +119,7 @@ class AnswerServiceTest {
     void submitTextAnswer_duplicateAnswer_throwsConflict() {
         when(sessionService.findById(sessionId)).thenReturn(session);
         when(questionBank.findByCode(2, "L2_1")).thenReturn(questionItem);
-        when(responseRepository.findBySessionIdAndQuestionCode(sessionId.toString(), "L2_1"))
+        when(responseRepository.findBySessionIdAndQuestionCode(sessionId, "L2_1"))
                 .thenReturn(Optional.of(new ResponseDocument()));
 
         assertThatThrownBy(() -> answerService.submitTextAnswer(userId, textRequest))
@@ -143,7 +142,7 @@ class AnswerServiceTest {
         when(sessionService.findById(sessionId)).thenReturn(session);
         when(questionBank.findByCode(2, "L2_1")).thenReturn(questionItem);
         when(questionBank.findIndexByCode(2, "L2_1")).thenReturn(0);
-        when(responseRepository.findBySessionIdAndQuestionCode(sessionId.toString(), "L2_1"))
+        when(responseRepository.findBySessionIdAndQuestionCode(sessionId, "L2_1"))
                 .thenReturn(Optional.empty());
         when(responseRepository.save(any(ResponseDocument.class))).thenAnswer(inv -> inv.getArgument(0));
 

@@ -6,15 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
-import java.util.UUID;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class IsaaScoreDTO {
-    private UUID id;
-    private UUID sessionId;
+    private String id;
+    private String sessionId;
     private int totalScore;
     private String severity;
     private int disabilityPct;

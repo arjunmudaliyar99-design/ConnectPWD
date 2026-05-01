@@ -1,0 +1,142 @@
+{
+  "module": "ADULT_SELF",
+  "title": "Adult Self-Assessment Questionnaire",
+  "sections": [
+    {
+      "sectionId": "AQ_S1",
+      "title": "Communication & Social Interaction",
+      "subtitle": "Questions about how you communicate and interact with others",
+      "questions": [
+        {
+          "id": "AQ_1",
+          "text": "Do you find it difficult to start or maintain conversations?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes", "Sometimes", "No"]
+        },
+        {
+          "id": "AQ_2",
+          "text": "Do you find it hard to understand jokes, sarcasm, or figurative language?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes", "Sometimes", "No"]
+        },
+        {
+          "id": "AQ_3",
+          "text": "Do you prefer routines and find it distressing when plans change unexpectedly?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes", "Sometimes", "No"]
+        },
+        {
+          "id": "AQ_4",
+          "text": "How comfortable are you in social gatherings with unfamiliar people?",
+          "responseType": "RATING_SCALE",
+          "options": ["1 - Very uncomfortable", "2", "3", "4", "5 - Very comfortable"]
+        },
+        {
+          "id": "AQ_5",
+          "text": "Do you have difficulty understanding the emotions or perspectives of others?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes", "Sometimes", "No"]
+        }
+      ]
+    },
+    {
+      "sectionId": "AQ_S2",
+      "title": "Sensory & Behavioural",
+      "subtitle": "Questions about sensory experiences and repetitive behaviours",
+      "questions": [
+        {
+          "id": "AQ_6",
+          "text": "Are you unusually sensitive to sounds, lights, textures, or smells?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes", "Sometimes", "No"]
+        },
+        {
+          "id": "AQ_7",
+          "text": "Do you engage in repetitive behaviours or movements when stressed or excited?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes", "Sometimes", "No"]
+        },
+        {
+          "id": "AQ_8",
+          "text": "Do you have strong, specific interests that you focus on intensely?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes", "Sometimes", "No"]
+        },
+        {
+          "id": "AQ_9",
+          "text": "How much does sensory sensitivity affect your daily life?",
+          "responseType": "RATING_SCALE",
+          "options": ["1 - Not at all", "2", "3", "4", "5 - Greatly"]
+        }
+      ]
+    },
+    {
+      "sectionId": "AQ_S3",
+      "title": "Daily Living & Independence",
+      "subtitle": "Questions about managing daily tasks and independence",
+      "questions": [
+        {
+          "id": "AQ_10",
+          "text": "Are you able to manage daily tasks (cooking, cleaning, personal hygiene) independently?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes", "With support", "No"]
+        },
+        {
+          "id": "AQ_11",
+          "text": "Are you currently employed or engaged in a vocational activity?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes, employed", "Vocational training", "No"]
+        },
+        {
+          "id": "AQ_12",
+          "text": "How many hours per day do you sleep on average?",
+          "responseType": "NUMBER",
+          "options": null
+        },
+        {
+          "id": "AQ_13",
+          "text": "Describe the main challenges you face in your daily life.",
+          "responseType": "SUBJECTIVE_150",
+          "options": null
+        },
+        {
+          "id": "AQ_14",
+          "text": "What support do you currently receive (therapy, community services, family)?",
+          "responseType": "DESCRIPTIVE_50",
+          "options": null
+        }
+      ]
+    },
+    {
+      "sectionId": "AQ_S4",
+      "title": "Mental Health & Wellbeing",
+      "subtitle": "Questions about your emotional wellbeing",
+      "questions": [
+        {
+          "id": "AQ_15",
+          "text": "Do you experience anxiety in social or unfamiliar situations?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes", "Sometimes", "No"]
+        },
+        {
+          "id": "AQ_16",
+          "text": "Do you experience periods of low mood or depression?",
+          "responseType": "YES_SOMETIMES_NO",
+          "options": ["Yes", "Sometimes", "No"]
+        },
+        {
+          "id": "AQ_17",
+          "text": "How would you rate your overall quality of life?",
+          "responseType": "RATING_SCALE",
+          "options": ["1 - Very poor", "2", "3", "4", "5 - Excellent"]
+        },
+        {
+          "id": "AQ_18",
+          "text": "What are your personal goals and what support would help you achieve them?",
+          "responseType": "OPEN_ENDED_300",
+          "options": null
+        }
+      ]
+    }
+  ]
+}

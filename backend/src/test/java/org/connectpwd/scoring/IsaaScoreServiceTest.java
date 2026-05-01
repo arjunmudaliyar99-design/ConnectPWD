@@ -19,12 +19,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+@SuppressWarnings("null")
 @ExtendWith(MockitoExtension.class)
 class IsaaScoreServiceTest {
 
@@ -36,14 +36,14 @@ class IsaaScoreServiceTest {
     @InjectMocks
     private IsaaScoreService isaaScoreService;
 
-    private UUID sessionId;
-    private UUID userId;
+    private String sessionId;
+    private String userId;
     private AssessmentSession session;
 
     @BeforeEach
     void setUp() {
-        sessionId = UUID.randomUUID();
-        userId = UUID.randomUUID();
+        sessionId = "session-id-001";
+        userId = "user-id-001";
         session = AssessmentSession.builder()
                 .id(sessionId)
                 .userId(userId)
@@ -53,7 +53,7 @@ class IsaaScoreServiceTest {
     @Test
     void computeScore_returnsExistingScore() {
         IsaaScore existing = IsaaScore.builder()
-                .id(UUID.randomUUID())
+                .id("score-id-001")
                 .sessionId(sessionId)
                 .totalScore(120)
                 .severity(SeverityLevel.MODERATE)
@@ -86,7 +86,7 @@ class IsaaScoreServiceTest {
         List<ResponseDocument> responses = new ArrayList<>();
         for (int i = 0; i < 40; i++) {
             ResponseDocument doc = ResponseDocument.builder()
-                    .sessionId(sessionId.toString())
+                    .sessionId(sessionId)
                     .level(2)
                     .questionIndex(i)
                     .questionCode("L2_" + (i + 1))
@@ -95,10 +95,10 @@ class IsaaScoreServiceTest {
             responses.add(doc);
         }
 
-        when(responseRepository.findBySessionIdAndLevel(sessionId.toString(), 2)).thenReturn(responses);
+        when(responseRepository.findBySessionIdAndLevel(sessionId, 2)).thenReturn(responses);
         when(isaaScoreRepository.save(any(IsaaScore.class))).thenAnswer(inv -> {
             IsaaScore s = inv.getArgument(0);
-            s.setId(UUID.randomUUID());
+            s.setId("score-" + System.nanoTime());
             return s;
         });
 
@@ -126,13 +126,13 @@ class IsaaScoreServiceTest {
         List<ResponseDocument> responses = new ArrayList<>();
         for (int i = 0; i < 30; i++) {
             responses.add(ResponseDocument.builder()
-                    .sessionId(sessionId.toString())
+                    .sessionId(sessionId)
                     .level(2)
                     .questionIndex(i)
                     .scaleValue(3)
                     .build());
         }
-        when(responseRepository.findBySessionIdAndLevel(sessionId.toString(), 2)).thenReturn(responses);
+        when(responseRepository.findBySessionIdAndLevel(sessionId, 2)).thenReturn(responses);
 
         assertThatThrownBy(() -> isaaScoreService.computeScore(sessionId, userId, "CAREGIVER"))
                 .isInstanceOf(AppException.class)

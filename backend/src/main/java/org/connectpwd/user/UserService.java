@@ -5,15 +5,14 @@ import org.connectpwd.common.AppException;
 import org.connectpwd.common.ErrorCode;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
+@SuppressWarnings("null")
 public class UserService {
 
     private final UserRepository userRepository;
 
-    public User findById(UUID id) {
+    public User findById(String id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> AppException.notFound(ErrorCode.USER_NOT_FOUND, "User not found"));
     }

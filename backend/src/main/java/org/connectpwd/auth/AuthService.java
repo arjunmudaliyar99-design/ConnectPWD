@@ -12,10 +12,10 @@ import org.connectpwd.user.UserRepository;
 import org.connectpwd.user.UserRole;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@SuppressWarnings("null")
 public class AuthService {
 
     private final UserRepository userRepository;
@@ -23,7 +23,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuditLog auditLog;
 
-    @Transactional
+    @SuppressWarnings("null")
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw AppException.conflict(ErrorCode.DUPLICATE_EMAIL, "Email already registered");
@@ -69,7 +69,7 @@ public class AuthService {
         return AuthResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .userId(user.getId().toString())
+                .userId(user.getId())
                 .role(user.getRole().name())
                 .language(user.getLanguage())
                 .build();

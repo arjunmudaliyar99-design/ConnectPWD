@@ -8,8 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/api/v1/session/{sessionId}/report")
 @RequiredArgsConstructor
@@ -20,9 +18,9 @@ public class ReportController {
     @PostMapping
     @PreAuthorize("hasAnyRole('CAREGIVER', 'PSYCHOLOGIST', 'ADMIN')")
     public ResponseEntity<ApiResponse<ReportResponse>> generateReport(
-            @PathVariable UUID sessionId,
+            @PathVariable String sessionId,
             Authentication authentication) {
-        UUID userId = UUID.fromString(authentication.getName());
+        String userId = authentication.getName();
         String role = authentication.getAuthorities().iterator().next().getAuthority().replace("ROLE_", "");
         ReportResponse response = reportService.generateReport(sessionId, userId, role);
         return ResponseEntity.ok(ApiResponse.ok(response));
@@ -31,9 +29,9 @@ public class ReportController {
     @GetMapping
     @PreAuthorize("hasAnyRole('CAREGIVER', 'PSYCHOLOGIST', 'ADMIN')")
     public ResponseEntity<ApiResponse<ReportResponse>> getReport(
-            @PathVariable UUID sessionId,
+            @PathVariable String sessionId,
             Authentication authentication) {
-        UUID userId = UUID.fromString(authentication.getName());
+        String userId = authentication.getName();
         String role = authentication.getAuthorities().iterator().next().getAuthority().replace("ROLE_", "");
         ReportResponse response = reportService.getReport(sessionId, userId, role);
         return ResponseEntity.ok(ApiResponse.ok(response));
