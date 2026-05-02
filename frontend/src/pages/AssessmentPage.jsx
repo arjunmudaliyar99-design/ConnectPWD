@@ -77,8 +77,15 @@ export default function AssessmentPage() {
     });
   }, [addMessage]);
 
+  // Guard against React StrictMode double-fire (dev) and accidental re-renders
+  const pushedQuestionRef = useRef(null);
+
   useEffect(() => {
     if (!currentQuestion) return;
+    const key = currentQuestion?.code ?? currentQuestion?.id;
+    if (pushedQuestionRef.current === key) return;
+    pushedQuestionRef.current = key;
+
     const q = currentQuestion;
     const text = language === 'hi' ? (q.textHi || q.textEn || q.text) : (q.textEn || q.text);
     const section = q.sectionTitle || (language === 'hi' ? q.domainNameHi || q.domainNameEn : q.domainNameEn);

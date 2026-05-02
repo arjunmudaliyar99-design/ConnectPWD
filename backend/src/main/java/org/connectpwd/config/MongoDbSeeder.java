@@ -20,15 +20,19 @@ public class MongoDbSeeder {
     @SuppressWarnings("null")
     CommandLineRunner seedAdmin() {
         return args -> {
-            if (!userRepository.existsByEmail("admin@connectpwd.org")) {
-                userRepository.save(User.builder()
-                        .fullName("ConnectPWD Admin")
-                        .email("admin@connectpwd.org")
-                        .passwordHash(passwordEncoder.encode("Admin@ConnectPWD1"))
-                        .role(UserRole.ADMIN)
-                        .language("en")
-                        .isActive(true)
-                        .build());
+            try {
+                if (!userRepository.existsByEmail("admin@connectpwd.org")) {
+                    userRepository.save(User.builder()
+                            .fullName("ConnectPWD Admin")
+                            .email("admin@connectpwd.org")
+                            .passwordHash(passwordEncoder.encode("Admin@ConnectPWD1"))
+                            .role(UserRole.ADMIN)
+                            .language("en")
+                            .isActive(true)
+                            .build());
+                }
+            } catch (Exception e) {
+                System.err.println("[MongoDbSeeder] Skipping admin seed — DB unavailable: " + e.getMessage());
             }
         };
     }

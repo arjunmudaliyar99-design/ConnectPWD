@@ -1,59 +1,71 @@
-/* Chat layout */
-.chatContainer {
-  display: flex;
-  flex-direction: column;
-  height: 100dvh;
-  background: var(--bg-primary);
-  font-family: var(--font-sans);
-  color: var(--text-primary);
-  max-width: 760px;
-  margin: 0 auto;
-  position: relative;
-}
-
+/* ============================================================
+   HEADER
+   ============================================================ */
 .chatHeader {
   position: sticky;
   top: 0;
-  z-index: 10;
-  background: var(--bg-primary);
+  z-index: 20;
+  background: rgba(9, 9, 11, 0.85);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   border-bottom: 1px solid var(--border);
   padding: 12px 20px;
 }
 
+/* ============================================================
+   MESSAGE LIST
+   ============================================================ */
 .messageList {
   flex: 1;
   overflow-y: auto;
-  padding: 24px 20px 140px;
+  overflow-x: hidden;
+  padding: 24px 16px 170px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
   scroll-behavior: smooth;
+  overscroll-behavior: contain;
 }
 
 .messageList::-webkit-scrollbar {
-  width: 4px;
+  width: 3px;
+}
+.messageList::-webkit-scrollbar-track {
+  background: transparent;
 }
 .messageList::-webkit-scrollbar-thumb {
   background: var(--border);
-  border-radius: 4px;
+  border-radius: 99px;
 }
 
+/* ============================================================
+   INPUT AREA (fixed bottom)
+   ============================================================ */
 .inputArea {
   position: fixed;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  max-width: 760px;
-  background: linear-gradient(to top, var(--bg-primary) 70%, transparent);
-  padding: 16px 20px 24px;
+  max-width: 720px;
+  padding: 10px 16px 26px;
+  z-index: 10;
+  background: linear-gradient(to top, var(--bg-primary) 72%, transparent 100%);
 }
 
-/* Message bubbles */
+/* ============================================================
+   MESSAGE ROWS
+   ============================================================ */
 .message {
   display: flex;
   gap: 10px;
-  max-width: 85%;
+  max-width: 88%;
+  animation: msgIn 0.2s ease-out both;
+}
+
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .message.bot {
@@ -63,248 +75,31 @@
 .message.user {
   align-self: flex-end;
   flex-direction: row-reverse;
+  max-width: 80%;
 }
 
+/* ============================================================
+   AVATAR
+   ============================================================ */
 .avatar {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  background: var(--accent);
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--bg-primary);
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
   margin-top: 2px;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.4);
 }
 
-.bubble {
-  padding: 12px 16px;
-  border-radius: var(--radius);
-  line-height: 1.6;
-  font-size: 15px;
-}
-
-.bubble.bot {
-  background: var(--bot-bubble);
-  border: 1px solid var(--border);
-  border-top-left-radius: 4px;
-}
-
-.bubble.user {
-  background: var(--user-bubble);
-  border: 1px solid var(--border);
-  border-top-right-radius: 4px;
-}
-
-/* Typing indicator */
-.typingDots {
-  display: flex;
-  gap: 5px;
-  padding: 14px 16px;
-  background: var(--bot-bubble);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  border-top-left-radius: 4px;
-  width: fit-content;
-}
-
-.dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--accent);
-  animation: bounce 1.2s infinite;
-}
-
-.dot:nth-child(2) { animation-delay: 0.15s; }
-.dot:nth-child(3) { animation-delay: 0.30s; }
-
-@keyframes bounce {
-  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-  30%            { transform: translateY(-6px); opacity: 1; }
-}
-
-/* Section divider */
-.sectionDivider {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 8px 0;
-  color: var(--text-muted);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.sectionDivider::before,
-.sectionDivider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--border);
-}
-
-/* Progress bar */
-.progressWrapper {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-}
-
-.progressTrack {
-  flex: 1;
-  height: 3px;
-  background: var(--border);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.progressFill {
-  height: 100%;
-  background: var(--accent);
-  border-radius: 4px;
-  transition: width 0.4s ease;
-}
-
-.progressLabel {
-  font-size: 12px;
-  color: var(--text-muted);
-  white-space: nowrap;
-}
-
-/* Input components */
-.inputWrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.chipGroup {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.chip {
-  padding: 8px 16px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  background: var(--bg-elevated);
-  color: var(--text-primary);
-  font-size: 14px;
-  font-family: var(--font-sans);
-  cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
-}
-
-.chip:hover,
-.chip.selected {
-  border-color: var(--accent);
-  background: rgba(217, 119, 6, 0.12);
-  color: var(--accent);
-}
-
-.scaleRow {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.scaleBtn {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: var(--bg-elevated);
-  color: var(--text-primary);
-  font-size: 15px;
-  font-family: var(--font-mono);
-  cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
-}
-
-.scaleBtn:hover,
-.scaleBtn.selected {
-  border-color: var(--accent);
-  background: rgba(217, 119, 6, 0.12);
-  color: var(--accent);
-}
-
-.textareaField {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: var(--bg-elevated);
-  color: var(--text-primary);
-  font-size: 15px;
-  font-family: var(--font-sans);
-  line-height: 1.6;
-  resize: none;
-  outline: none;
-  box-sizing: border-box;
-  transition: border-color 0.15s;
-}
-
-.textareaField:focus {
-  border-color: var(--accent);
-}
-
-.textareaField::placeholder {
-  color: var(--text-muted);
-}
-
-.numberField {
-  padding: 12px 14px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: var(--bg-elevated);
-  color: var(--text-primary);
-  font-size: 15px;
-  font-family: var(--font-mono);
-  outline: none;
-  width: 120px;
-  transition: border-color 0.15s;
-}
-
-.numberField:focus {
-  border-color: var(--accent);
-}
-
-.sendRow {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-.sendBtn {
-  padding: 10px 22px;
-  border-radius: 20px;
-  border: none;
-  background: var(--accent);
-  color: var(--bg-primary);
-  font-size: 14px;
-  font-weight: 600;
-  font-family: var(--font-sans);
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.sendBtn:hover {
-  background: var(--accent-hover);
-}
-
-.sendBtn:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-/* Bubble column: stacks bubble + speaker button */
+/* ============================================================
+   BUBBLE COLUMN
+   ============================================================ */
 .bubbleCol {
   display: flex;
   flex-direction: column;
@@ -316,22 +111,49 @@
   align-items: flex-end;
 }
 
-/* Speaker button — appears below bot bubble */
+/* ============================================================
+   BUBBLES
+   ============================================================ */
+.bubble {
+  padding: 11px 15px;
+  border-radius: var(--radius);
+  line-height: 1.65;
+  font-size: 14.5px;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+.bubble.bot {
+  background: var(--bot-bubble);
+  border: 1px solid var(--bot-border);
+  border-top-left-radius: 3px;
+  color: var(--text-primary);
+}
+
+.bubble.user {
+  background: var(--user-bubble);
+  border: 1px solid var(--user-border);
+  border-top-right-radius: 3px;
+  color: #dbeafe;
+}
+
+/* ============================================================
+   SPEAKER BUTTON
+   ============================================================ */
 .speakerBtn {
   background: none;
   border: none;
-  padding: 2px 6px;
-  font-size: 13px;
+  padding: 3px 8px;
+  font-size: 12px;
   cursor: pointer;
   color: var(--text-muted);
-  border-radius: 6px;
+  border-radius: var(--radius-xs);
   line-height: 1;
-  transition: color 0.15s, background 0.15s;
+  transition: color 0.15s, background 0.15s, opacity 0.15s;
   opacity: 0;
   pointer-events: none;
 }
 
-.message.bot:hover .speakerBtn,
 .bubbleCol:hover .speakerBtn {
   opacity: 1;
   pointer-events: auto;
@@ -339,44 +161,332 @@
 
 .speakerBtn:hover {
   color: var(--accent);
-  background: rgba(217, 119, 6, 0.08);
+  background: var(--accent-dim);
 }
 
-/* Mic button */
+/* ============================================================
+   TYPING INDICATOR
+   ============================================================ */
+.typingDots {
+  display: flex;
+  gap: 5px;
+  padding: 13px 16px;
+  background: var(--bot-bubble);
+  border: 1px solid var(--bot-border);
+  border-radius: var(--radius);
+  border-top-left-radius: 3px;
+  width: fit-content;
+  align-items: center;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  animation: bounce 1.3s ease-in-out infinite;
+}
+
+.dot:nth-child(2) { animation-delay: 0.18s; }
+.dot:nth-child(3) { animation-delay: 0.36s; }
+
+@keyframes bounce {
+  0%, 55%, 100% { transform: translateY(0); opacity: 0.35; }
+  27%            { transform: translateY(-5px); opacity: 1; background: var(--accent); }
+}
+
+/* ============================================================
+   SECTION DIVIDER
+   ============================================================ */
+.sectionDivider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0 2px;
+  color: var(--text-muted);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  align-self: stretch;
+}
+
+.sectionDivider::before,
+.sectionDivider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ============================================================
+   PROGRESS BAR
+   ============================================================ */
+.progressWrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.progressTrack {
+  flex: 1;
+  height: 3px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #f97316 0%, #fb923c 100%);
+  border-radius: 99px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 8px rgba(249, 115, 22, 0.45);
+}
+
+.progressLabel {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
+}
+
+/* ============================================================
+   INPUT WRAPPER
+   ============================================================ */
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ============================================================
+   CHIP OPTIONS
+   ============================================================ */
+.chipGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  padding: 9px 18px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.chip:hover {
+  border-color: var(--accent-border);
+  background: var(--accent-dim);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.chip.selected {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.chip:active {
+  transform: scale(0.96);
+}
+
+/* ============================================================
+   SCALE BUTTONS (1–5)
+   ============================================================ */
+.scaleRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.scaleBtn {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  font-size: 16px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  touch-action: manipulation;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.scaleBtn:hover {
+  border-color: var(--accent-border);
+  background: var(--accent-dim);
+  color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+}
+
+.scaleBtn.selected {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+  color: var(--accent);
+  box-shadow: 0 0 14px rgba(249, 115, 22, 0.28);
+}
+
+.scaleBtn:active {
+  transform: scale(0.93);
+}
+
+/* ============================================================
+   TEXT AREA
+   ============================================================ */
+.textareaField {
+  width: 100%;
+  padding: 13px 15px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-size: 15px;
+  font-family: var(--font-sans);
+  line-height: 1.65;
+  resize: none;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.18s, box-shadow 0.18s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.textareaField:focus {
+  border-color: var(--accent-border);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+.textareaField::placeholder {
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   NUMBER INPUT
+   ============================================================ */
+.numberField {
+  padding: 13px 15px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-size: 16px;
+  font-family: var(--font-mono);
+  outline: none;
+  width: 130px;
+  transition: border-color 0.18s, box-shadow 0.18s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.numberField:focus {
+  border-color: var(--accent-border);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+/* ============================================================
+   SEND ROW & BUTTON
+   ============================================================ */
+.sendRow {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+}
+
+.sendBtn {
+  padding: 10px 24px;
+  border-radius: 99px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  touch-action: manipulation;
+  letter-spacing: 0.01em;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sendBtn:hover:not(:disabled) {
+  background: var(--accent-hover);
+  box-shadow: 0 4px 16px rgba(249, 115, 22, 0.38);
+  transform: translateY(-1px);
+}
+
+.sendBtn:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.sendBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   MIC BUTTON
+   ============================================================ */
 .micBtn {
-  width: 38px;
-  height: 38px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   border: 1px solid var(--border);
   background: var(--bg-elevated);
   color: var(--text-muted);
-  font-size: 17px;
+  font-size: 18px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  transition: all 0.18s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .micBtn:hover {
-  border-color: var(--accent);
+  border-color: var(--accent-border);
   color: var(--accent);
+  background: var(--accent-dim);
 }
 
 .micBtn.micActive {
   border-color: #ef4444;
   color: #ef4444;
   background: rgba(239, 68, 68, 0.1);
-  animation: micPulse 1.2s infinite;
+  animation: micPulse 1.4s ease-in-out infinite;
 }
 
 @keyframes micPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-  50%       { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+  50%       { box-shadow: 0 0 0 9px rgba(239, 68, 68, 0); }
 }
 
-/* Voice row below chips / scale */
+/* ============================================================
+   VOICE ROW + STATUS
+   ============================================================ */
 .voiceRow {
   display: flex;
   align-items: center;
@@ -384,7 +494,6 @@
   margin-top: 4px;
 }
 
-/* Recording status label */
 .voiceStatus {
   display: flex;
   align-items: center;
@@ -392,17 +501,20 @@
   font-size: 12px;
   color: #ef4444;
   font-family: var(--font-sans);
+  font-weight: 500;
 }
 
 .recordingDot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: #ef4444;
-  animation: recBlink 1s infinite;
+  animation: recBlink 1s ease-in-out infinite;
 }
 
 @keyframes recBlink {
   0%, 100% { opacity: 1; }
-  50%       { opacity: 0.2; }
+  50%       { opacity: 0.15; }
 }
+
+

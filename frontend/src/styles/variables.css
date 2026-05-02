@@ -1,18 +1,44 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
-  --bg-primary: #0d0d0d;
-  --bg-surface: #1a1a1a;
-  --bg-elevated: #242424;
-  --border: #2e2e2e;
-  --text-primary: #e8e8e8;
-  --text-muted: #8a8a8a;
-  --accent: #d97706;
-  --accent-hover: #b45309;
-  --bot-bubble: #1e1e1e;
-  --user-bubble: #292929;
+  /* Backgrounds */
+  --bg-primary: #09090b;
+  --bg-surface: #111113;
+  --bg-elevated: #18181b;
+  --bg-input: #141416;
+
+  /* Borders */
+  --border: #27272a;
+  --border-hover: #3f3f46;
+
+  /* Text */
+  --text-primary: #fafafa;
+  --text-secondary: #a1a1aa;
+  --text-muted: #52525b;
+
+  /* Brand accent */
+  --accent: #f97316;
+  --accent-hover: #fb923c;
+  --accent-dim: rgba(249, 115, 22, 0.12);
+  --accent-border: rgba(249, 115, 22, 0.4);
+
+  /* Chat bubbles */
+  --bot-bubble: #1c1c1f;
+  --bot-border: #2a2a2e;
+  --user-bubble: #1a2d42;
+  --user-border: rgba(59, 130, 246, 0.22);
+
+  /* Radius */
   --radius: 16px;
-  --radius-sm: 8px;
-  --font-sans: 'DM Sans', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --radius-sm: 10px;
+  --radius-xs: 6px;
+
+  /* Fonts */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.65);
+  --shadow-glow: 0 0 28px rgba(249, 115, 22, 0.2);
 }

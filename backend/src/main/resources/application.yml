@@ -24,7 +24,7 @@ jwt:
   refresh-expiry-ms: ${JWT_REFRESH_EXPIRY_MS:604800000} # 7 days
 
 cors:
-  allowed-origins: ${CORS_ORIGINS:http://localhost:5173}
+  allowed-origins: ${CORS_ORIGINS:http://localhost:5173,http://localhost:5174}
 
 r2:
   account-id: ${R2_ACCOUNT_ID:}

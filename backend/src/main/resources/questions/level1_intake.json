@@ -10,4 +10,3 @@
   {"index":8,"code":"L1_9","text_en":"What is the primary reason for seeking this assessment?","text_hi":"यह मूल्यांकन प्राप्त करने का प्राथमिक कारण क्या है?","description_en":"Please describe in your own words.","description_hi":"कृपया अपने शब्दों में वर्णन करें।","type":"TEXT","domainIndex":2,"domainName_en":"Medical History","domainName_hi":"चिकित्सा इतिहास","options_en":null,"options_hi":null},
   {"index":9,"code":"L1_10","text_en":"Describe the child's daily routine briefly.","text_hi":"बच्चे की दैनिक दिनचर्या का संक्षेप में वर्णन करें।","description_en":"Include waking time, meals, activities, and sleep time.","description_hi":"जागने का समय, भोजन, गतिविधियाँ और सोने का समय शामिल करें।","type":"TEXT","domainIndex":3,"domainName_en":"Daily Living","domainName_hi":"दैनिक जीवन","options_en":null,"options_hi":null}
 ]
-0
