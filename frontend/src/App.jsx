@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './store/authStore';
+import { useTheme } from './hooks/useTheme';
 import LandingPage from './pages/LandingPage';
 import TriagePage from './pages/TriagePage';
 import AssessmentPage from './pages/AssessmentPage';
@@ -20,9 +21,16 @@ function AdminRoute({ children }) {
   return children;
 }
 
+// Mounts at the root to keep the <html> class in sync with localStorage
+function ThemeApplier() {
+  useTheme(); // side-effect only — applies class to document.documentElement
+  return null;
+}
+
 export default function App() {
   return (
     <ErrorBoundary>
+      <ThemeApplier />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />

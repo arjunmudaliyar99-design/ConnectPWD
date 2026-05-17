@@ -15,17 +15,6 @@ public class ReportController {
 
     private final ReportService reportService;
 
-    @PostMapping
-    @PreAuthorize("hasAnyRole('CAREGIVER', 'PSYCHOLOGIST', 'ADMIN')")
-    public ResponseEntity<ApiResponse<ReportResponse>> generateReport(
-            @PathVariable String sessionId,
-            Authentication authentication) {
-        String userId = authentication.getName();
-        String role = authentication.getAuthorities().iterator().next().getAuthority().replace("ROLE_", "");
-        ReportResponse response = reportService.generateReport(sessionId, userId, role);
-        return ResponseEntity.ok(ApiResponse.ok(response));
-    }
-
     @GetMapping
     @PreAuthorize("hasAnyRole('CAREGIVER', 'PSYCHOLOGIST', 'ADMIN')")
     public ResponseEntity<ApiResponse<ReportResponse>> getReport(

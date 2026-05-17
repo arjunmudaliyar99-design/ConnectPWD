@@ -1,0 +1,120 @@
+/* ============================================================
+   THEME TOGGLE — sliding pill with Sun / Moon
+   ============================================================ */
+
+/* Outer button — transparent, provides the 44×44 touch target */
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  /* Prevent layout shift when glow appears */
+  outline: none;
+}
+
+/* Track — the pill background */
+.track {
+  position: relative;
+  width: 52px;
+  height: 28px;
+  border-radius: 99px;
+  border: 1.5px solid var(--border);
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  align-items: center;
+  overflow: visible;
+}
+
+/* ---- Dark mode track ---- */
+.dark .track {
+  background: #1e1e2e;
+  border-color: rgba(139, 92, 246, 0.4);
+  box-shadow: 0 0 0 0 rgba(139, 92, 246, 0);
+}
+
+.dark:hover .track,
+.dark:focus-visible .track {
+  border-color: rgba(139, 92, 246, 0.7);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.18),
+              0 0 12px rgba(139, 92, 246, 0.25);
+}
+
+/* ---- Light mode track ---- */
+.light .track {
+  background: #fef9c3;
+  border-color: rgba(234, 179, 8, 0.6);
+  box-shadow: 0 0 0 0 rgba(234, 179, 8, 0);
+}
+
+.light:hover .track,
+.light:focus-visible .track {
+  border-color: rgba(234, 179, 8, 0.9);
+  box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.2),
+              0 0 14px rgba(234, 179, 8, 0.3);
+}
+
+/* Thumb — the sliding circle */
+.thumb {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: left 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+              background 0.3s ease,
+              box-shadow 0.3s ease;
+  will-change: left;
+}
+
+/* Dark mode thumb — sits on the RIGHT */
+.dark .thumb {
+  left: calc(100% - 24px);
+  background: #2d2b55;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5),
+              0 0 10px rgba(139, 92, 246, 0.35);
+}
+
+/* Light mode thumb — sits on the LEFT */
+.light .thumb {
+  left: 2px;
+  background: #fef08a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15),
+              0 0 12px rgba(234, 179, 8, 0.4);
+}
+
+/* Icon inside thumb — bounce on click */
+.icon {
+  font-size: 13px;
+  line-height: 1;
+  display: block;
+  animation: iconBounce 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Re-trigger bounce each time the parent class swaps */
+.dark .icon,
+.light .icon {
+  animation: iconBounce 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes iconBounce {
+  0%   { transform: scale(0.6) rotate(-15deg); }
+  60%  { transform: scale(1.25) rotate(5deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* Focus ring (keyboard nav) */
+.toggle:focus-visible .track {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}

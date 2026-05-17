@@ -27,6 +27,9 @@ export const useSessionStore = create((set) => ({
   addMessage: (msg) =>
     set((state) => ({ messages: [...state.messages, msg] })),
 
+  removeMessages: (ids) =>
+    set((state) => ({ messages: state.messages.filter((m) => !ids.includes(m.id)) })),
+
   clearSession: () =>
     set({
       sessionId: null,

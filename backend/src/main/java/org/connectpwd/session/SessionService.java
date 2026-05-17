@@ -66,7 +66,8 @@ public class SessionService {
     }
 
     public void checkAccess(AssessmentSession session, String userId, String userRole) {
-        if (userRole != null && (UserRole.PSYCHOLOGIST.name().equals(userRole) || UserRole.ADMIN.name().equals(userRole))) {
+        if (userRole != null
+                && (UserRole.PSYCHOLOGIST.name().equals(userRole) || UserRole.ADMIN.name().equals(userRole))) {
             return;
         }
         if (!session.getUserId().equals(userId)) {
@@ -79,9 +80,16 @@ public class SessionService {
         int total = resolveTotalQuestions(session);
 
         if (nextIndex >= total) {
-            session.setStatus(SessionStatus.COMPLETED);
-            session.setCompletedAt(Instant.now());
-            auditLog.logSessionComplete(session.getId());
+            // Module-based (flat) sessions complete immediately; ISAA level-based sessions
+            // mark LEVEL_COMPLETE until the final level (4), then COMPLETED.
+            boolean isLastLevel = session.getModuleType() != null || session.getCurrentLevel() >= 4;
+            if (isLastLevel) {
+                session.setStatus(SessionStatus.COMPLETED);
+                session.setCompletedAt(Instant.now());
+                auditLog.logSessionComplete(session.getId());
+            } else {
+                session.setStatus(SessionStatus.LEVEL_COMPLETE);
+            }
         } else {
             session.setCurrentQuestionIndex(nextIndex);
         }
@@ -105,8 +113,7 @@ public class SessionService {
             currentQuestion = questionBank.toDTO(
                     session.getCurrentLevel(),
                     session.getCurrentQuestionIndex(),
-                    session.getLanguage()
-            );
+                    session.getLanguage());
         }
         return toResponse(session, currentQuestion, questionBank.getLevelSize(session.getCurrentLevel()));
     }

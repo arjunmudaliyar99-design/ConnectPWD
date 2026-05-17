@@ -14,6 +14,8 @@ export default function QuestionInput({
   isListening = false,
   onMicToggle,
   voiceTranscript = '',
+  isTtsMuted = false,
+  onTtsToggle,
 }) {
   const [value, setValue] = useState('');
   const [selected, setSelected] = useState(null);
@@ -39,6 +41,19 @@ export default function QuestionInput({
       type="button"
     >
       {micActive ? '⏹' : '🎙'}
+    </button>
+  );
+
+  const MuteButton = () => (
+    <button
+      className={`${styles.muteBtn} ${isTtsMuted ? styles.muteBtnActive : ''}`}
+      onClick={onTtsToggle}
+      title={isTtsMuted ? (language === 'hi' ? 'TTS चालू करें' : 'Unmute text-to-speech') : (language === 'hi' ? 'TTS बंद करें' : 'Mute text-to-speech')}
+      aria-label={isTtsMuted ? 'Unmute text-to-speech' : 'Mute text-to-speech'}
+      aria-pressed={isTtsMuted}
+      type="button"
+    >
+      {isTtsMuted ? '🔇' : '🔊'}
     </button>
   );
 
@@ -84,6 +99,7 @@ export default function QuestionInput({
         </div>
         <div className={styles.voiceRow}>
           {onMicToggle && <MicButton />}
+          {onTtsToggle && <MuteButton />}
           {micActive && (
             <span className={styles.voiceStatus}>
               <span className={styles.recordingDot} />
@@ -111,6 +127,7 @@ export default function QuestionInput({
         </div>
         <div className={styles.voiceRow}>
           {onMicToggle && <MicButton />}
+          {onTtsToggle && <MuteButton />}
           {micActive && (
             <span className={styles.voiceStatus}>
               <span className={styles.recordingDot} />
@@ -135,6 +152,7 @@ export default function QuestionInput({
             placeholder={language === 'hi' ? 'संख्या दर्ज करें' : 'Enter number'}
           />
           {onMicToggle && <MicButton />}
+          {onTtsToggle && <MuteButton />}
         </div>
         {micActive && (
           <span className={styles.voiceStatus}>
@@ -174,6 +192,7 @@ export default function QuestionInput({
       <div className={styles.sendRow}>
         <span className={styles.progressLabel}>{value.length}/{maxLen}</span>
         {onMicToggle && <MicButton />}
+        {onTtsToggle && <MuteButton />}
         <button className={styles.sendBtn} disabled={!value.trim()} onClick={handleTextSubmit}>
           {language === 'hi' ? 'भेजें' : 'Send'}
         </button>

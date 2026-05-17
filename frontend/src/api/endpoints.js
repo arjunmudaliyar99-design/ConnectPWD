@@ -34,6 +34,7 @@ export const scoringApi = {
 
 export const reportApi = {
   generate: (sessionId) => api.post(`/session/${sessionId}/report`),
+  generateDetailed: (sessionId) => api.post('/report/generate', { sessionId }, { responseType: 'blob' }),
   get: (sessionId) => api.get(`/session/${sessionId}/report`),
 };
 

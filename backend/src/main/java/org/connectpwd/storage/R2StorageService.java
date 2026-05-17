@@ -84,6 +84,11 @@ public class R2StorageService implements StorageService {
 
     @Override
     public String uploadPdf(String sessionId, byte[] pdfBytes) {
+        if (s3Client == null) {
+            throw new AppException(ErrorCode.STORAGE_ERROR,
+                    "Storage not configured — set R2_ACCOUNT_ID, R2_ACCESS_KEY_ID and R2_SECRET_ACCESS_KEY",
+                    org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         String key = "reports/" + sessionId + "/report.pdf";
         PutObjectRequest putRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
@@ -98,6 +103,11 @@ public class R2StorageService implements StorageService {
 
     @Override
     public String generatePresignedUrl(String objectKey) {
+        if (presigner == null) {
+            throw new AppException(ErrorCode.STORAGE_ERROR,
+                    "Storage not configured — set R2_ACCOUNT_ID, R2_ACCESS_KEY_ID and R2_SECRET_ACCESS_KEY",
+                    org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         GetObjectRequest getRequest = GetObjectRequest.builder()
                 .bucket(bucketName)
                 .key(objectKey)

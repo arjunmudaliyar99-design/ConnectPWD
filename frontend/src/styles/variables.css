@@ -42,3 +42,46 @@
   --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.65);
   --shadow-glow: 0 0 28px rgba(249, 115, 22, 0.2);
 }
+
+/* ============================================================
+   LIGHT MODE — applied when <html class="light">
+   ============================================================ */
+html.light {
+  /* Backgrounds */
+  --bg-primary: #f8f8f8;
+  --bg-surface: #ffffff;
+  --bg-elevated: #f1f1f4;
+  --bg-input: #ffffff;
+
+  /* Borders */
+  --border: #e4e4e7;
+  --border-hover: #d1d1d6;
+
+  /* Text */
+  --text-primary: #09090b;
+  --text-secondary: #52525b;
+  --text-muted: #a1a1aa;
+
+  /* Brand accent stays orange */
+  --accent: #ea6c0a;
+  --accent-hover: #f97316;
+  --accent-dim: rgba(249, 115, 22, 0.1);
+  --accent-border: rgba(249, 115, 22, 0.35);
+
+  /* Chat bubbles */
+  --bot-bubble: #ffffff;
+  --bot-border: #e4e4e7;
+  --user-bubble: #dbeafe;
+  --user-border: rgba(59, 130, 246, 0.3);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.12);
+  --shadow-glow: 0 0 28px rgba(249, 115, 22, 0.15);
+}
+
+/* Light mode: body/html background */
+html.light body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
